@@ -10,6 +10,7 @@ public abstract class Config {
     // Screen config
     public static final double DEFAULT_SCREEN_WIDTH = 1080; // screen width on launch
     public static final double DEFAULT_SCREEN_HEIGHT = 720; // screen height on launch
+    public static final double RESOLUTION_RATIO = 1; // resolution ratio of rendered pixels
 
 
     // World generation config

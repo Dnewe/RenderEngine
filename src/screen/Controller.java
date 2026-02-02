@@ -168,8 +168,6 @@ public class Controller {
         double centerX = scene.getWindow().getX() + scene.getX() + scene.getWidth() / 2;
         double centerY = scene.getWindow().getY() + scene.getY() + scene.getHeight() / 2;
 
-        //System.out.println(centerX + " , " + centerY);
-
         previousMouseX = centerX - scene.getWindow().getX();
         previousMouseY = centerY - scene.getWindow().getY();
 

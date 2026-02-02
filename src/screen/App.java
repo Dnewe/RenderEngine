@@ -12,9 +12,9 @@ public class App {
             Logger.info("Starting app...");
             World world = World.getWorld();
 
-            long averageTime = 0;
+            //long averageTime = 0;
             timer.start();
-            for (int i=0; i<2000; i++) {
+            for (int i=0; i<100; i++) {
                 //long time = System.currentTimeMillis();
 
                 world.tick();
@@ -29,7 +29,7 @@ public class App {
             }
             timer.end();
             timer.addToTotal(); 
-            System.out.println("FPS : " + 1000.0/averageTime);
+            //System.out.println("FPS : " + 1000.0/averageTime);
             Timer.printTimes();
         } catch (Exception e) {
             Logger.error(e);

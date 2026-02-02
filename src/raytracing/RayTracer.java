@@ -23,6 +23,7 @@ public class RayTracer {
     private VoxelArray voxelArray;
     private Color[][] pixels;
     private long[][][] voxels;
+    private double[][][][] voxelsBrightnessCache;
     private ArrayList<int[]> lights;
 
     // timer
@@ -41,7 +42,7 @@ public class RayTracer {
     private double[] right;
     private double[] up;
     // CONSTANT
-    private final double EPSILON = 1e-5;
+    private final double EPSILON = 1e-8;
     private double maxRadius = 128;
     private final Color VOIDCOLOR = Color.BLACK;
     private final double BRIGHTNESS_THRESHOLD = 0.001;  // (1/BRIGHTNESS_THRESHOLD)*100% of brightness
@@ -53,6 +54,7 @@ public class RayTracer {
         pixels = screen.getPixels();
         voxelArray = World.getWorld().getVoxelArray();
         voxels = voxelArray.getVoxels();
+        voxelsBrightnessCache = new double[voxels.length][voxels[0].length][voxels[0][0].length][];
         lights = voxelArray.getLights();
         executor = Executors.newFixedThreadPool(6);
     }
@@ -76,13 +78,13 @@ public class RayTracer {
         theta = camera.getTheta();
         phi = camera.getPhi();
         scale = Math.tan(camera.getHFov() / 2);
-        aspectRatio = screen.getHeight() / screen.getWidth();
+        aspectRatio = (double) screen.getHeight() / screen.getWidth();
         forward = new double[]{Math.cos(theta) * Math.cos(phi), Math.sin(theta), Math.cos(theta) * Math.sin(phi)};  
         right = new double[]{-Math.sin(phi), 0, Math.cos(phi)};
         up = new double[]{-Math.sin(theta) * Math.cos(phi), Math.cos(theta), -Math.sin(theta) * Math.sin(phi)};
         int x=0;
         int y=0;
-        for (x=0; x < (int)screen.getWidth() - TILE_SIZE+1; x += TILE_SIZE) {
+        for (x=0; x < screen.getWidth() - TILE_SIZE+1; x += TILE_SIZE) {
             for (y=0; y < (int)screen.getHeight()- TILE_SIZE+1; y += TILE_SIZE) {
                 int finalX = x;
                 int finalY = y;
@@ -93,10 +95,10 @@ public class RayTracer {
         }
 
         
-        int remainingTileSizeX = ((int)screen.getWidth()-(x));
-        int remainingTileSizeY = ((int)screen.getHeight()-(y));
+        int remainingTileSizeX = (screen.getWidth()-(x));
+        int remainingTileSizeY = (screen.getHeight()-(y));
         if (remainingTileSizeX>0) {
-            for (y=0; y < (int)screen.getHeight()- TILE_SIZE+1; y += TILE_SIZE) {
+            for (y=0; y < screen.getHeight()- TILE_SIZE+1; y += TILE_SIZE) {
                 int finalX = x;
                 int finalY = y;
 
@@ -105,7 +107,7 @@ public class RayTracer {
             }
         } 
         if (remainingTileSizeY>0) {
-            for (x=0; x < (int)screen.getWidth() - TILE_SIZE+1; x += TILE_SIZE) {
+            for (x=0; x < screen.getWidth() - TILE_SIZE+1; x += TILE_SIZE) {
                 int finalX = x;
                 int finalY = y;
 
@@ -122,7 +124,7 @@ public class RayTracer {
 
 
         // wait for tasks to finish
-        System.out.println("tile size :" + TILE_SIZE + " width" + screen.getWidth() + " height" + screen.getHeight() + " , rX" + remainingTileSizeX + "  rY" + remainingTileSizeY);
+        //System.out.println("tile size :" + TILE_SIZE + " width" + screen.getWidth() + " height" + screen.getHeight() + " , rX" + remainingTileSizeX + "  rY" + remainingTileSizeY);
         for (Future<?> future : futures) {
             try {
                 future.get();
@@ -212,6 +214,10 @@ public class RayTracer {
 
         private double[] getBrightness(double originX, double originY, double originZ) {
             double[] brightnessRGB = {0,0,0};
+
+            if (voxelsBrightnessCache[(int)originX][(int)originY][(int)originZ] != null) {
+                //return voxelsBrightnessCache[(int)originX][(int)originY][(int)originZ];
+            }
     
             for (int[] v : lights) {
                 if (v[0] == originX && v[1] == originY && v[2] == originZ) {
@@ -252,6 +258,7 @@ public class RayTracer {
                     }
                 }
             }
+            voxelsBrightnessCache[(int)originX][(int)originY][(int)originZ] = brightnessRGB;
             return brightnessRGB;
         }
 

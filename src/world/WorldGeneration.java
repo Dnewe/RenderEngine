@@ -15,9 +15,11 @@ public class WorldGeneration {
 
     // ground properties
     private static int groundHeight = 4;
-    private static VoxelRepresentation groundVoxel = new VoxelRepresentation(Color.WHITE, 0,0,0);
+    private static VoxelRepresentation groundVoxel = new VoxelRepresentation(Color.WHITE, 0,1.0f,0);
     private static VoxelRepresentation groundVoxel2 = new VoxelRepresentation(Color.LIGHTGRAY, 0,0,0);
-    private static VoxelRepresentation lightVoxel = new VoxelRepresentation(Color.WHITE, 0, 0, 20);
+    private static VoxelRepresentation redLightVoxel = new VoxelRepresentation(Color.RED, 0, 0, 20);
+    private static VoxelRepresentation greenLightVoxel = new VoxelRepresentation(Color.GREEN, 0, 0, 20);
+    private static VoxelRepresentation blueLightVoxel = new VoxelRepresentation(Color.BLUE, 0, 0, 20);
     private static VoxelRepresentation sun = new VoxelRepresentation(Color.rgb(255, 240, 200), 0, 0, 400);
    
     
@@ -32,7 +34,9 @@ public class WorldGeneration {
         setVoxel(sun, 128, groundHeight+70, 128);
         fillVoxel(new VoxelRepresentation(Color.RED), 130, groundHeight+1, 130, 130, groundHeight+1, 130);
         //fillVoxel(lightVoxel, 140, 16, 130, 140, 16, 130);
-        fillVoxel(lightVoxel, 128, 16, 139, 128, 16, 139);
+        fillVoxel(redLightVoxel, 128, 16, 144, 128, 16, 144);
+        fillVoxel(greenLightVoxel, 128, 16, 133, 128, 16, 133);
+        fillVoxel(blueLightVoxel, 128, 19, 139, 128, 19, 139);
         //fillVoxel(lightVoxel, 28, 16, 139, 28, 20, 139);
         //fillVoxel(lightVoxel, 132, 9, 125, 132, 9, 125);
         //fillVoxel(lightVoxel, 131, 20, 131, 131, 20, 131);
